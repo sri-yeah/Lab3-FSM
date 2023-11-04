@@ -1,6 +1,6 @@
 #include "verilated.h"
 #include "verilated_vcd_c.h"
-#include "Vlsfr4.h"
+#include "Vf1_fsm.h"
 
 #include "vbuddy.cpp"
 #define MAX_SIM_CYC 1000000
@@ -11,22 +11,22 @@ int main(int argc, char **argv, char **env) {
 
     Verilated::commandArgs(argc, argv);
     // init top verilog instance 
-    Vlsfr4* top = new Vlsfr4;
+    Vf1_fsm* top = new Vf1_fsm;
     // innit trace dump
     Verilated::traceEverOn(true);
     VerilatedVcdC* tfp = new VerilatedVcdC;
     top->trace (tfp, 99); 
-    tfp->open ("lsf4.vcd");
+    tfp->open ("f1_fsm.vcd");
     
     // init vbuddy
     if (vbdOpen()!=1) return(-1);
-    vbdHeader("L3T1:4bit LSFR");
+    vbdHeader("L3T2:F1 FSM");
     vbdSetMode(1);
 
     // initialise simulation input
     top->clk = 1;
     top->rst = 0;
-    top->en = 1;
+    top->en = 0;
 
 
     //run simulations 
@@ -41,8 +41,6 @@ int main(int argc, char **argv, char **env) {
         top->en = vbdFlag();
 
         //display stuff
-        vbdHex(2, (top->dout >> 4) & 0xF);
-        vbdHex(1, top->dout & 0xF);
         vbdBar(top->dout & 0xFF);
 
         // either sim finished or 'q' is pressed
