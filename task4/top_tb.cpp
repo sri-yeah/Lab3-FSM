@@ -51,9 +51,10 @@ int main(int argc, char **argv, char **env) {
     if(timing && top->trigger){
       timing = false;
       int timee = vbdElapsed();
-      vbdHex(4, (timee >> 16) & 0xF);
-      vbdHex(3, (timee >> 8) & 0xF);
-      vbdHex(2, (timee >> 4) & 0xF);
+      //convert to binary and then BCD and pass in with mask and int()
+      vbdHex(4, (timee/1000) & 0xF);
+      vbdHex(3, (timee/100) & 0xF);
+      vbdHex(2, (timee/10) & 0xF);
       vbdHex(1, timee & 0xF);
     }
 
